@@ -1,20 +1,33 @@
-export class UserResponseDto {
-    id: number;
-    name: string;
-    email: string;
-    address: string;
-    phone: string;
-    country?: string | undefined;
-    city?: string | undefined;
+export class OrderSummaryDto {
+  id: string;
+  date: Date;
 
-    constructor(user: Partial<UserResponseDto>) {
-       const { id, name, email, address, phone, country, city } = user;
-        this.id = id ?? 1;
-        this.name = name ?? "";
-        this.email = email ?? "";
-        this.address = address ?? "";
-        this.phone = phone ?? "";
-        this.country = country;
-        this.city = city;
-    }
+  constructor(order: Partial<OrderSummaryDto>) {
+    this.id = order.id || '';
+    this.date = order.date || new Date();
+  }
+}
+
+export class UserResponseDto {
+  id: string;
+  name: string;
+  email: string;
+  address: string;
+  phone: string;
+  country?: string;
+  city?: string;
+
+  orders: OrderSummaryDto[];
+
+  constructor(user: Partial<UserResponseDto> & { orders?: any[] }) {
+    this.id = user.id || '';
+    this.name = user.name || '';
+    this.email = user.email || '';
+    this.address = user.address || '';
+    this.phone = user.phone || '';
+    this.country = user.country;
+    this.city = user.city;
+
+    this.orders = (user.orders || []).map(order => new OrderSummaryDto(order));
+  }
 }

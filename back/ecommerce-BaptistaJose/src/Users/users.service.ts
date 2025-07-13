@@ -1,32 +1,32 @@
 import { Injectable } from "@nestjs/common";
 import { UsersRepository } from "./users.repository";
-import { User } from "./dto/User.dto";
+import { User } from "./enitities/users.entity";
 
 @Injectable()
-export class UsersService{
-    constructor(private readonly usersRepository: UsersRepository) {}
-    
-    getUsers(){
-        return this.usersRepository.getUsers();
-    }
-    
-    getUserById(id: number) {
-        return this.usersRepository.getUserById(id);
-    }
-    
-    createUser (user: User): Promise<User>{
-        return this.usersRepository.createUser(user)
-    }
-    
-    updateUser(id: number, user: Partial<User>) {
-        return this.usersRepository.updateUser(id,user);
-    }
-    
-    deleteUser(id: number) {
-        return this.usersRepository.deleteUser(id)
-    }
+export class UsersService {
+  constructor(private readonly usersRepository: UsersRepository) {}
 
-    getUserByEmail(email: string) {
-        return this.usersRepository.getUserByEmail(email);
-    }
+  getUsers() {
+    return this.usersRepository.getUsers();
+  }
+
+  getUserById(id: string) {
+    return this.usersRepository.getUserById(id);
+  }
+
+  getUserByEmail(email: string) {
+    return this.usersRepository.getUserByEmail(email);
+  }
+
+  createUser(user: Partial<User>) {
+    return this.usersRepository.createUser(user);
+  }
+
+  updateUser(id: string, userUpdate: Partial<User>) {
+    return this.usersRepository.updateUser(id, userUpdate);
+  }
+
+  deleteUser(id: string) {
+    return this.usersRepository.deleteUser(id);
+  }
 }

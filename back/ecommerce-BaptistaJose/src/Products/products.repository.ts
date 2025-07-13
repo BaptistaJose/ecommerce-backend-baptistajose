@@ -1,77 +1,73 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Product } from "./dto/Product.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Product } from "./entities/products.entity";
+import { Repository } from "typeorm";
+import { Category } from "src/categories/entities/category.entity";
 
 @Injectable()
 export class ProductsRepository {
-    private products: Product[] = [
-        {
-            id: 1,
-            name: "Product 1",
-            description: "Description of Product 1",
-            price: 100,
-            category: "Category 1",
-            stock: 50,
-            imageUrl: "https://example.com/product1.jpg"
-        },
-        {
-            id: 2,
-            name: "Product 2",
-            description: "Description of Product 2",
-            price: 200,
-            category: "Category 1",
-            stock: 30,
-            imageUrl: "https://example.com/product2.jpg"
-        },
-        {
-            id: 3,
-            name: "Product 3",
-            description: "Description of Product 3",
-            price: 150,
-            category: "Category 2",
-            stock: 20,
-            imageUrl: "https://example.com/product3.jpg"
-        }
-    ];
+    
+    constructor (
+        @InjectRepository(Product) private readonly productRepository: Repository<Product>,
+        @InjectRepository(Category) private categoryRepository: Repository<Category>
+    ){}
+    
     
     async getProducts(): Promise<Product[]> {
-        return this.products;
+        return await this.productRepository.find();
     }
     
-    async getProductById(id: number): Promise<Product | undefined> {
-        return this.products.find(product => product.id === id);
+    async getProductById(id: string): Promise<Product| null> {
+        return await this.productRepository.findOneBy({id});
     }
     
     async createProduct(product: Product): Promise<Product> {
-        const newId = this.products.length > 0
-        ? Math.max(...this.products.map(u => u.id)) + 1
-        : 1;
-        
-        product.id = newId;
-        this.products.push(product)
-        return product;
+        const newProduct = await this.productRepository.create(product);
+        await this.productRepository.save(newProduct);
+        return newProduct;
     }
     
-    async updateProduct(id: number, product: Partial<Product>): Promise<Product> {
-        const index = this.products.findIndex(p => p.id === id);
+    async updateProduct(id: string, product: Partial<Product>): Promise<Product> {
+        const productFound = await this.productRepository.findOneBy({id});
         
-        if (index === -1) {
+        if (!productFound) {
             throw new NotFoundException("Producto no encontrado");
         }
         
-        this.products[index] = { ...this.products[index], ...product };
-        
-        return this.products[index];
+        Object.assign(productFound, product)
+      return  await this.productRepository.save(productFound)
+      
     }
-   
-    async deleteProduct(id: number): Promise<number> {
-        const index = this.products.findIndex(p => p.id === id);
+    
+    async deleteProduct(id: string): Promise<string> {
+        const product = await this.productRepository.findOneBy({id})
         
-        if (index === -1) {
+        if (!product) {
             throw new NotFoundException("Producto no encontrado");
         }
+        
+        await this.productRepository.delete(id)
+        
+        return product.id
+        
+        }
 
-        this.products.splice(index, 1);
+        async addProductsSeeder(products: { name: string; description: string; price: number; stock: number; category: string; }[]) {
+            
+            for(let prop of products){
+                const productFound = await this.productRepository.findOneBy({name: prop.name})
 
-        return id;
+                if(!productFound) {
+                    const categoryFound = await this.categoryRepository.findOne({where:{name: prop.category}})
+
+                    if(!categoryFound){
+                        continue;
+                    }
+
+                   const product = await this.productRepository.create({name: prop.name, description: prop.description, price: prop.price, stock: prop.stock, category: categoryFound});
+                   await this.productRepository.save(product)
+                }
+                
+            }
+        }
     }
-}
