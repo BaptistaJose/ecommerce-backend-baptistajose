@@ -7,15 +7,16 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
   UseGuards,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { User } from "./enitities/users.entity";
 import { UserResponseDto } from "./dto/response.user.dto";
 import { AuthGuard } from "src/guard/auth/auth.guard";
+import { createUserDto } from "./dto/createUser.dto";
 
 @Controller("users")
 export class UsersController {
@@ -32,8 +33,9 @@ export class UsersController {
   }
 
   @Get(":id")
-  async getUserById(@Param("id") id: string) {
+  async getUserById(@Param("id", new ParseUUIDPipe()) id: string) {
     const user = await this.usersService.getUserById(id);
+
     if (!user) {
       throw new NotFoundException(`El usuario con el ID: ${id} no existe`);
     }
@@ -42,17 +44,17 @@ export class UsersController {
 
   @Post("/register")
   @HttpCode(HttpStatus.CREATED)
-  createUser(@Body() user: Partial<User>) {
+  createUser(@Body() user: createUserDto) {
     return this.usersService.createUser(user);
   }
 
   @Put("/:id")
-  updateUser(@Param("id") id: string, @Body() user: Partial<User>) {
+  updateUser(@Param("id", new ParseUUIDPipe()) id: string, @Body() user: createUserDto) {
     return this.usersService.updateUser(id, user);
   }
 
   @Delete("/:id")
-  deleteUser(@Param("id") id: string) {
+  deleteUser(@Param("id", new ParseUUIDPipe()) id: string) {
     return this.usersService.deleteUser(id);
   }
 }

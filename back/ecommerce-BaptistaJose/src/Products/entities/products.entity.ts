@@ -1,6 +1,6 @@
 import { Category } from "src/categories/entities/category.entity";
 import { OrderDetail } from "src/order-detail/entities/order-detail.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({name:"products"})
 export class Product{
@@ -20,7 +20,7 @@ export class Product{
     stock: number;
     
     @Column()
-    imageUrl: string = 'http://example.com/default-image.png';
+    imageUrl: string = 'https://res.cloudinary.com/ditvxwaqx/image/upload/v1752806284/ktshlk7wojoycqupl9zu.webp';
 
     @ManyToOne(()=> Category, (category)=> category.products)
     @JoinColumn({name: 'category_id'})
@@ -29,4 +29,10 @@ export class Product{
     @ManyToMany(()=> OrderDetail, (orderDetail)=> orderDetail.products)
     @JoinTable()
     orderDetails: OrderDetail[];
+
+    @CreateDateColumn({ type: 'timestamp' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ type: 'timestamp' })
+    updatedAt: Date;
 }

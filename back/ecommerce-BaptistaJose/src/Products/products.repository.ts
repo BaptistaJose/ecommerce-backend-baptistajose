@@ -21,7 +21,7 @@ export class ProductsRepository {
         return await this.productRepository.findOneBy({id});
     }
     
-    async createProduct(product: Product): Promise<Product> {
+    async createProduct(product: Partial< Product>): Promise<Product> {
         const newProduct = await this.productRepository.create(product);
         await this.productRepository.save(newProduct);
         return newProduct;

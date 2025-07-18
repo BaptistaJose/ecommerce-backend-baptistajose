@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginAuthDto } from './dto/loginAuth.dto';
 import { UsersService } from 'src/Users/users.service';
 
@@ -13,6 +13,6 @@ export class AuthService {
           return { message: 'Login successful', user };
       } 
 
-      return { message: 'Invalid credentials' };
+     throw new HttpException({ message: 'Invalid credentials' }, HttpStatus.UNAUTHORIZED);
   }
 }

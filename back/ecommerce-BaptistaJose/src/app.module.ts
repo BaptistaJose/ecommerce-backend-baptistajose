@@ -7,9 +7,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { typeormConfig } from './config/typeorm';
 import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
-  imports: [OrdersModule,CategoriesModule,UsersModule, ProductsModule, AuthModule,
+  imports: [CloudinaryModule,OrdersModule,CategoriesModule,UsersModule, ProductsModule, AuthModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (ConfigService: ConfigService): TypeOrmModuleOptions => {

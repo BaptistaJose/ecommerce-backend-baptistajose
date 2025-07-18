@@ -11,10 +11,10 @@ export class OrderDetail{
     @Column('decimal', { precision: 10, scale: 2 })
     price: number;
 
-    @OneToOne(()=> Order, (order)=> order.orderDetail)
+    @OneToOne(()=> Order, (order)=> order.orderDetail, {onDelete: 'CASCADE'})
     @JoinColumn()
     order: Order;
 
-    @ManyToMany(()=> Product, (product)=> product.orderDetails)
+    @ManyToMany(()=> Product, (product)=> product.orderDetails,{onDelete: 'CASCADE'})
     products: Product[];
 }

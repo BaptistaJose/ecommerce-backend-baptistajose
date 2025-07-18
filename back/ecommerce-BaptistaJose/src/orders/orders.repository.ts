@@ -38,8 +38,8 @@ export class OrdersRepository{
         if(!productId){
            throw new  NotFoundException(`El producto  con el id: ${producto.id} no existe`)
         }else if(productId.stock > 0 ){
-            contador += productId.price;
-            const stock = productId.stock - 1;
+            contador += Number(productId.price);
+            const stock = Number(productId.stock - 1);
             
             await this.productService.updateProduct(productId.id, {stock})
             validProducts.push(productId)
