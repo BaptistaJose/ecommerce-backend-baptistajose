@@ -1,5 +1,6 @@
 import { Order } from "src/orders/entities/order.entity";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Role } from "../enum/role.enum";
 
 @Entity({name:"users"})
 export class User{
@@ -12,7 +13,7 @@ export class User{
     @Column({length: 50, unique: true, nullable: false})
     email: string;
     
-    @Column({length: 20, nullable: false})
+    @Column({nullable: false})
     password: string;
     
     @Column({type: 'text'})
@@ -35,4 +36,7 @@ export class User{
 
     @UpdateDateColumn({ type: 'timestamp' })
     updatedAt: Date;
+
+    @Column({type: 'enum', enum: Role, default: Role.User})
+    role: Role;
 }

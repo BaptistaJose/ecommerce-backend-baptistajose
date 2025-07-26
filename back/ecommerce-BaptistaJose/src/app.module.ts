@@ -8,6 +8,8 @@ import { typeormConfig } from './config/typeorm';
 import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { JwtModule } from '@nestjs/jwt';
+
 
 @Module({
   imports: [CloudinaryModule,OrdersModule,CategoriesModule,UsersModule, ProductsModule, AuthModule,
@@ -24,7 +26,22 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeormConfig]
-    })
+    }),
+    JwtModule.registerAsync({
+  global: true,
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: async (configService: ConfigService) => {
+    const secret = configService.get<string>('JWT_SECRET');
+ 
+    return {
+      secret,
+      signOptions: {
+        expiresIn: '1h',
+      },
+    };
+  },
+})
 ],
   controllers: [],
   providers: [],

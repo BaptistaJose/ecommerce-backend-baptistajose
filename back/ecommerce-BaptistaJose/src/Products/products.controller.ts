@@ -1,6 +1,10 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put, UseGuards } from "@nestjs/common";
 import { ProductsService } from "./products.service";
 import { ProductDto } from "./dto/Product.dto";
+import { AuthGuard } from "src/guard/auth/auth.guard";
+import { RolGuard } from "src/guard/rol-guard/rol/rol.guard";
+import { Roles } from "src/decorators/role/role.decorator";
+import { Role } from "src/Users/enum/role.enum";
 
 @Controller('products')
 export class ProductsController{
@@ -27,6 +31,8 @@ export class ProductsController{
         }
 
         @Put('/:id')
+        @Roles(Role.Admin)
+        @UseGuards(AuthGuard, RolGuard)
         updateProduct(@Param('id', new ParseUUIDPipe()) id: string, @Body() product: Partial< ProductDto>){
             return this.productsService.updateProduct(id, product);
         }

@@ -25,17 +25,15 @@ export class UsersRepository {
     return user;
   }
 
-  async getUserByEmail(email: string): Promise<User> {
+  async getUserByEmail(email: string): Promise<User | null> {
     const user = await this.userRepository.findOne({ where: { email } });
-    if (!user) {
-      throw new NotFoundException("Usuario no encontrado");
-    }
     return user;
   }
 
   async createUser(user: Partial<User>): Promise<User> {
     const newUser = this.userRepository.create(user);
-    return this.userRepository.save(newUser);
+    const savedUser = await this.userRepository.save(newUser);
+    return savedUser;
   }
 
   async updateUser(id: string, userUpdate: Partial<User>): Promise<User> {

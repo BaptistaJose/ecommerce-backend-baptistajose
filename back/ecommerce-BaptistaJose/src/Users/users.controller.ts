@@ -17,13 +17,17 @@ import { UsersService } from "./users.service";
 import { UserResponseDto } from "./dto/response.user.dto";
 import { AuthGuard } from "src/guard/auth/auth.guard";
 import { createUserDto } from "./dto/createUser.dto";
+import { RolGuard } from "src/guard/rol-guard/rol/rol.guard";
+import { Roles } from "src/decorators/role/role.decorator";
+import { Role } from "./enum/role.enum";
 
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolGuard)
   async getUsers(
     @Query("page") page: number = 1,
     @Query("limit") limit: number = 5
@@ -33,6 +37,7 @@ export class UsersController {
   }
 
   @Get(":id")
+  @UseGuards(AuthGuard)
   async getUserById(@Param("id", new ParseUUIDPipe()) id: string) {
     const user = await this.usersService.getUserById(id);
 
@@ -49,11 +54,13 @@ export class UsersController {
   }
 
   @Put("/:id")
+  @UseGuards(AuthGuard)
   updateUser(@Param("id", new ParseUUIDPipe()) id: string, @Body() user: createUserDto) {
     return this.usersService.updateUser(id, user);
   }
 
   @Delete("/:id")
+  @UseGuards(AuthGuard)
   deleteUser(@Param("id", new ParseUUIDPipe()) id: string) {
     return this.usersService.deleteUser(id);
   }

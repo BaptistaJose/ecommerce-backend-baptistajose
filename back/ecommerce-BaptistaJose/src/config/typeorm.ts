@@ -12,7 +12,7 @@ const config: DataSourceOptions =
       port: Number(process.env.DB_PORT) ,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
-      synchronize: false,
+      synchronize: true,
       logging: true,
       entities:['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/migrations/*{.js,.ts}'],

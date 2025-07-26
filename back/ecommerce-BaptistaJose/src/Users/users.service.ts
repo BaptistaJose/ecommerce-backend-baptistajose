@@ -18,8 +18,8 @@ export class UsersService {
     return this.usersRepository.getUserByEmail(email);
   }
 
-  createUser(user: Partial<User>) {
-    return this.usersRepository.createUser(user);
+  async createUser(user: Partial<User>) {
+    return await this.usersRepository.createUser(user);
   }
 
   updateUser(id: string, userUpdate: Partial<User>) {
