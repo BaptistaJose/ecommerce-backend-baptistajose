@@ -5,6 +5,7 @@ import { AuthGuard } from "src/guard/auth/auth.guard";
 import { RolGuard } from "src/guard/rol-guard/rol/rol.guard";
 import { Roles } from "src/decorators/role/role.decorator";
 import { Role } from "src/Users/enum/role.enum";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller('products')
 export class ProductsController{
@@ -30,6 +31,7 @@ export class ProductsController{
             return this.productsService.createProduct(product);
         }
 
+        @ApiBearerAuth()
         @Put('/:id')
         @Roles(Role.Admin)
         @UseGuards(AuthGuard, RolGuard)
@@ -37,7 +39,10 @@ export class ProductsController{
             return this.productsService.updateProduct(id, product);
         }
 
+        @ApiBearerAuth()
         @Delete('/:id')
+        @Roles(Role.Admin)
+        @UseGuards(AuthGuard, RolGuard)
         deleteProduct(@Param('id', new ParseUUIDPipe()) id: string){
             return this.productsService.deleteProduct(id);
         }

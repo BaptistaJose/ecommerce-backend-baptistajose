@@ -2,11 +2,13 @@ import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePi
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CloudinaryService } from "./cloudinary.service";
 import { AuthGuard } from "src/guard/auth/auth.guard";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller('/files')
 export class CloudinaryController {
     constructor(private readonly cloudinaryService: CloudinaryService) {}
     
+    @ApiBearerAuth()
     @Post('/uploadImage/:id')
     @UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('file'))

@@ -10,12 +10,12 @@ export class Order{
     @ManyToOne(() => User, (user) => user.orders, {onDelete: 'CASCADE'})
     user: User;
 
-    @Column({type: 'timestamp',  default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     date: Date;
 
     @OneToOne(()=> OrderDetail, (orderDetail) => orderDetail.order)
     orderDetail: OrderDetail;
 
-    @UpdateDateColumn({ type: 'timestamp' })
+    @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     updatedAt: Date;
 }

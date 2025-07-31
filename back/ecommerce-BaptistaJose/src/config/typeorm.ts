@@ -20,6 +20,17 @@ const config: DataSourceOptions =
       //dropSchema: true
       }
 
+const SqliteTestDataSourceOptions: DataSourceOptions = {
+  type: 'sqlite',
+  database: ':memory:',
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  synchronize: true,
+  dropSchema: true,
+};
+
 export const typeormConfig = registerAs("typeorm", () => config);
 
+export const sqliteDataSourceConfig = registerAs('sqlite', () => SqliteTestDataSourceOptions)
+
 export const connectionSource = new DataSource(config)
+export const sqliteDataSource = new DataSource(SqliteTestDataSourceOptions)

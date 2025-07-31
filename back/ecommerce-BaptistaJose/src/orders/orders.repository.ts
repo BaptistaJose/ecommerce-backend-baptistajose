@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Order } from "./entities/order.entity";
 import { Repository } from "typeorm";
@@ -29,35 +29,43 @@ export class OrdersRepository{
         date: new Date()
     })) 
 
-    let contador = 0;
+    const uniqueProducts = new Map<string, boolean>();
+    const stockUpdates: { id: string, newStock: number }[] = [];
+    let totalPrice = 0;
     const validProducts: Product[] = [];
 
-    for(let producto of products){
-        const productId = await this.productService.getProductById(producto.id)
-
-        if(!productId){
-           throw new  NotFoundException(`El producto  con el id: ${producto.id} no existe`)
-        }else if(productId.stock > 0 ){
-            contador += Number(productId.price);
-            const stock = Number(productId.stock - 1);
-            
-            await this.productService.updateProduct(productId.id, {stock})
-            validProducts.push(productId)
-        }else {
-    console.log(`Producto sin stock: ${productId.name}`);
+for (let producto of products) {
+  if (uniqueProducts.has(producto.id)) {
+    throw new BadRequestException(`El producto con id ${producto.id} fue enviado más de una vez`);
   }
-       
-    }
+  uniqueProducts.set(producto.id, true);
 
-    const orderDetailEntity = new OrderDetail();
-    orderDetailEntity.order = OrderEntity;
-    orderDetailEntity.price = contador;
-    orderDetailEntity.products = validProducts;
-    
-    await this.orderDetailRepository.save(orderDetailEntity);
-    return orderDetailEntity;
-    };
-    
+  const productEntity = await this.productService.getProductById(producto.id);
+  if (!productEntity) {
+    throw new NotFoundException(`El producto con id ${producto.id} no existe`);
+  }
+
+  if (productEntity.stock <= 0) {
+    throw new BadRequestException(`El producto ${productEntity.name} no tiene stock disponible`);
+  }
+
+  totalPrice += Number(productEntity.price);
+  stockUpdates.push({ id: productEntity.id, newStock: productEntity.stock - 1 });
+  validProducts.push(productEntity);
+}
+
+for (let { id, newStock } of stockUpdates) {
+  await this.productService.updateProduct(id, { stock: newStock });
+}
+
+const orderDetailEntity = new OrderDetail();
+orderDetailEntity.order = OrderEntity;
+orderDetailEntity.price = totalPrice;
+orderDetailEntity.products = validProducts;
+
+await this.orderDetailRepository.save(orderDetailEntity);
+return orderDetailEntity;
+}  
 
 async getOrder(id: string) {
   const orderDetail = await this.orderDetailRepository.findOne({

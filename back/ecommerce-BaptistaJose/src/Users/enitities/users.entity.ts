@@ -31,12 +31,15 @@ export class User{
     @OneToMany(()=> Order, (order) => order.user)
     orders: Order[];
 
-    @CreateDateColumn({ type: 'timestamp' })
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
 
-    @UpdateDateColumn({ type: 'timestamp' })
+    @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     updatedAt: Date;
 
-    @Column({type: 'enum', enum: Role, default: Role.User})
+    @Column(
+    {type: 'enum',
+    enum: Role,
+    default: Role.User,})
     role: Role;
 }

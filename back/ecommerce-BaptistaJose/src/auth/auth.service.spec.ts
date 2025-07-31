@@ -23,7 +23,12 @@ describe('AuthService', () => {
       role: Role.User 
   }
   const mockUsersService: Partial<UsersService> ={
-    getUserByEmail: () => Promise.resolve(mockUser),
+    getUserByEmail: (email:string) => {
+      if(email === mockUser.email){
+        return Promise.resolve(mockUser)
+      }
+      return Promise.resolve(null)
+    },
     createUser: (user: Partial<User>):  Promise<User> => Promise.resolve({
       ...mockUser,
       ...user 
@@ -44,4 +49,19 @@ describe('AuthService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it("register() debe crear un usuario correctamente y debe tener el rol de User", async ()=>{
+        const user = await service.register({
+      name: 'pepito',
+      email: 'pepito23@gmail.com',
+      password: '123456',
+      confirmPassword: '123456',
+      address: 'akjgbdhajks',
+      phone: '3263526',
+      country: 'nasj',
+      city: 'Ciudad falsa',
+    })
+    expect(user).toHaveProperty('role', Role.User)
+    expect(user).toBeInstanceOf(Object)
+  })
 });
