@@ -4,7 +4,7 @@ import { ProductsModule } from './Products/products.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { sqliteDataSourceConfig, typeormConfig } from './config/typeorm';
+import { typeormConfig } from './config/typeorm'; // Solo importa typeormConfig
 import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
@@ -12,25 +12,21 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    
     ConfigModule.forRoot({
-    isGlobal: true,
-    envFilePath: `.env.${process.env.NODE_ENV || 'development'}`, 
-    load: [typeormConfig, sqliteDataSourceConfig]
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
+      load: [typeormConfig], // Solo carga typeormConfig
     }),
 
-    
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
-        const isTest = configService.get('NODE_ENV') === 'test';
-        const config = isTest
-          ? configService.get('sqlite')
-          : configService.get('typeorm');
+        const config = configService.get<TypeOrmModuleOptions>('typeorm');
 
         if (!config) {
           throw new Error('No se encontró la configuración de TypeORM');
         }
+
         return config;
       },
     }),
