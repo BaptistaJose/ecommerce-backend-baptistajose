@@ -1,11 +1,62 @@
-import { Controller, Get } from "@nestjs/common";
-import { UsersService } from "./users.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { UsersService } from './users.service';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { UserResponse } from './Dto/user.response';
+import type { Request } from 'express';
+import { User } from './User.entity';
 
 @Controller('users')
-export class UsersController{
-    constructor(private usersService: UsersService){}
-    @Get()
-    getUsers(){
-        return this.usersService.getUsers()
-    }
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  @UseGuards(AuthGuard)
+  async getUsers(@Query('page') page?: string, @Query('limit') limit?: string) {
+    const pageNum = Number(page);
+    const limitNum = Number(limit);
+
+    const validPage = !isNaN(pageNum) && pageNum > 0 ? pageNum : 1;
+    const validLimit = !isNaN(limitNum) && limitNum > 0 ? limitNum : 5;
+
+    const users = await this.usersService.getUsers(validPage, validLimit);
+    return users.map((user) => new UserResponse(user));
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  async getUserById(@Req() request: Request) {
+    const { id } = request.params;
+    const user = await this.usersService.getUserById(id);
+    return user;
+  }
+
+  @HttpCode(201)
+  @Post()
+  createUSer(@Body() user: User) {
+    return this.usersService.createUser(user);
+  }
+
+  @Put(':id')
+  @UseGuards(AuthGuard)
+  updateUser(@Param('id') id: string, @Body() user: any) {
+    return this.usersService.updateUser(id, user);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  deleteUser(@Param('id') id: string) {
+    return this.usersService.deleteUser(id);
+  }
 }

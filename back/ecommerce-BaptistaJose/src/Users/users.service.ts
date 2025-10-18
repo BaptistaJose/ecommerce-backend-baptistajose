@@ -1,11 +1,28 @@
-import { Injectable } from "@nestjs/common";
-import { UsersRepository } from "./users.repository";
+import { Injectable } from '@nestjs/common';
+import { UsersRepository } from './users.repository';
+import { User } from './User.entity';
 
 @Injectable()
-export class UsersService{
-    constructor(private usersRepository: UsersRepository){}
+export class UsersService {
+  constructor(private usersRepository: UsersRepository) {}
+  
+  async getUsers(page: number, limit: number) {
+    return await this.usersRepository.getUsers(page, limit);
+  }
+  
+  async getUserById(id:string) {
+    return  await this.usersRepository.getUserById(id);
+  }
 
-    getUsers(){
-        return this.usersRepository.getUsers();
-    }
+ async deleteUser(id: string) {
+      return await this.usersRepository.deleteUser(id);
+  }
+
+ async updateUser(id: string, user: User) {
+      return await this.usersRepository.updateUser(id, user);
+  }
+
+ async createUser(user: User) {
+      return await this.usersRepository.createUser(user);
+  }
 }
