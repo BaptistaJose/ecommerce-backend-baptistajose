@@ -48,7 +48,7 @@ export class ProductsController {
   @Put(':id')
   @UseGuards(AuthGuard)
   async updateProduct(@Param('id') id: string, @Body() product: Product) {
-    return await this.productsService.updateProduct(id,product);
+    return await this.productsService.updateProduct(id, product);
   }
 
   @Delete(':id')

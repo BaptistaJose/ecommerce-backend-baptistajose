@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order } from './Order.entity';
-import { Repository } from 'typeorm';
-import { OrderDetail } from 'src/order-details/OrderDetail.entity';
+import { Order } from 'src/orders/entities/Order.entity';
+import { DataSource, EntityManager, Or, Repository } from 'typeorm';
+import { OrderDetail } from 'src/orders/entities/OrderDetail.entity';
 import { Product } from 'src/products/Product.entity';
 import { User } from 'src/users/User.entity';
 
@@ -14,63 +18,74 @@ export class OrdersRepository {
     private orderDetailRepository: Repository<OrderDetail>,
     @InjectRepository(Product) private productRepository: Repository<Product>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    private dataSource: DataSource,
   ) {}
 
-  async addOrder(userId: string, products: Product[]) {
-    const user = await this.userRepository.findOneBy({ id: userId });
-    if (!user) return `el usuario con el id ${userId} no existe`;
-
-    const order = new Order();
-    order.user = user;
-    order.date = new Date();
-
-    const newOrder = await this.ordersRepository.save(order);
-
-    let productsArray: Product[];
-    try {
-      productsArray = await Promise.all(
-        products.map(async (elemento: Product) => {
-          const product = await this.productRepository.findOneBy({
-            id: elemento.id,
-          });
-          if (!product)
-            throw new Error(`Producto con id: ${elemento.id} no encontrado`);
-
-          await this.productRepository.update(
-            { id: elemento.id },
-            { stock: product.stock - 1 },
+  async addOrder(userId: string, products: Partial<Product[]>) {
+    return await this.dataSource.transaction(
+      async (entityManager: EntityManager) => {
+        const user = await entityManager.findOne(User, {
+          where: { id: userId },
+        });
+        if (!user)
+          throw new NotFoundException(
+            `el usuario con el id ${userId} no existe`,
           );
 
-          return product;
-        }),
-      );
-    } catch (err) {
-      return err instanceof Error ? err.message : 'Error procesando productos';
-    }
+        const order = new Order();
+        order.user = user;
+        order.date = new Date();
 
-    const total = productsArray.reduce(
-      (sum: number, product: Product) => sum + Number(product.price),
-      0,
+        const newOrder = await entityManager.save(Order, order);
+
+        let productsArray: Product[] = await Promise.all(
+          products.map(async (elemento: Product) => {
+            const product = await entityManager.findOne(Product, {
+              where: { id: elemento.id },
+            });
+            if (!product)
+              throw new NotFoundException(
+                `Producto con id: ${elemento.id} no encontrado`,
+              );
+
+            if (product.stock <= 0)
+              throw new BadRequestException(
+                `No hay stock del producto: ${product.name}`,
+              );
+
+            product.stock -= 1;
+
+            await entityManager.save(Product, product);
+            return product;
+          }),
+        );
+
+        const total = productsArray.reduce(
+          (sum: number, product: Product) => sum + Number(product.price),
+          0,
+        );
+
+        const orderDetail = new OrderDetail();
+        orderDetail.order = newOrder;
+        orderDetail.products = productsArray;
+        orderDetail.price = total;
+
+        await entityManager.save(OrderDetail, orderDetail);
+        return await entityManager.findOne(Order, {
+          where: { id: newOrder.id },
+          relations: { orderDetails: {products: true} },
+        });
+      },
     );
-
-    const orderDetail = new OrderDetail();
-    orderDetail.order = newOrder;
-    orderDetail.products = productsArray;
-    orderDetail.price = total;
-
-    await this.orderDetailRepository.save(orderDetail);
-    return await this.ordersRepository.find({
-      where: { id: newOrder.id },
-      relations: { orderDetails: true },
-    });
   }
 
   async getOrder(id: string) {
     const order = await this.ordersRepository.findOne({
       where: { id },
-      relations: { orderDetails:{products: true} },
+      relations: { orderDetails: { products: true } },
     });
-    if (!order) return `la orden con el id: ${id} no existe`;
+    if (!order)
+      throw new NotFoundException(`la orden con el id: ${id} no existe`);
 
     return order;
   }

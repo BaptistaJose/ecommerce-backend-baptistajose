@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrdersModule } from './orders/orders.module';
 import { CategoriesModule } from './categories/categories.module';
-import { OrderDetailsModule } from './order-details/order-details.module';
 import typeorm from './config/typeorm';
 
 @Module({
@@ -30,7 +29,6 @@ import typeorm from './config/typeorm';
     ProductsModule,
     OrdersModule,
     CategoriesModule,
-    OrderDetailsModule,
   ],
   controllers: [],
   providers: [],

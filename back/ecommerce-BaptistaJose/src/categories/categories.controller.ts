@@ -6,12 +6,12 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
-  async getCategories(){
-    return await this.categoriesService.getCategories()
+  async getCategories() {
+    return await this.categoriesService.getCategories();
   }
 
   @Get('seeder')
-  async addCategories(){
-    return await this.categoriesService.addCategories()
+  async addCategories() {
+    return await this.categoriesService.addCategories();
   }
 }

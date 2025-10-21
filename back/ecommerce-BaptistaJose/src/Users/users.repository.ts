@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './User.entity';
 import { Repository } from 'typeorm';
@@ -21,34 +21,34 @@ export class UsersRepository {
       where: { id },
       relations: { orders: true },
     });
-    if (!user) return `El usuario con el id: ${id} no existe`;
-    const {password, ...userNotPassword} = user
+    if (!user) throw new NotFoundException(`El usuario con el id: ${id} no existe`) 
+    const { password, ...userNotPassword } = user;
 
     return userNotPassword;
   }
 
-  async createUser(user: Omit<User, 'id'>): Promise<string> {
+  async createUser(user: Partial<User>): Promise<string> {
     const userCreate = await this.userRepository.create(user);
     const userSave = await this.userRepository.save(userCreate);
     return userSave.id;
   }
 
-  async updateUser(id: string, user: User) {
-    const userFound = await this.userRepository.findOneBy({id})
-    if(!userFound) return `El usuario no existe`;
-     await this.userRepository.update(id,user);
-    return id
+  async updateUser(id: string, user: Partial< User>) {
+    const userFound = await this.userRepository.findOneBy({ id });
+    if (!userFound) throw new NotFoundException(`El usuario con el id: ${id} no existe`)
+    await this.userRepository.update(id, user);
+    return id;
   }
 
- async deleteUser(id:string) {
-    const userFound = await this.userRepository.findOneBy({id})
-    if(!userFound) return `El usuario no existe`;
+  async deleteUser(id: string) {
+    const userFound = await this.userRepository.findOneBy({ id });
+    if (!userFound)throw new NotFoundException(`El usuario con el id: ${id} no existe`)
     await this.userRepository.remove(userFound);
-    return id
+    return id;
   }
 
-  async getUserByEmail(email:string){
-    const userFound = await this.userRepository.findOneBy({email});
+  async getUserByEmail(email: string) {
+    const userFound = await this.userRepository.findOneBy({ email });
     return userFound;
   }
 }

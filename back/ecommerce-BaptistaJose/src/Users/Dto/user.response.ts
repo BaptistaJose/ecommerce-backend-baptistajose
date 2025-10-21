@@ -14,6 +14,6 @@ export class UserResponse {
     this.address = user.address;
     this.phone = user.phone;
     this.country = user.country;
-    this.city = user.city
+    this.city = user.city;
   }
 }

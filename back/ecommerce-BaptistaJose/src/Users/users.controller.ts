@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   Param,
   Post,
   Put,
@@ -15,7 +14,7 @@ import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { UserResponse } from './Dto/user.response';
 import type { Request } from 'express';
-import { User } from './User.entity';
+import { CreateUserDto } from './Dto/createUser.dto';
 
 @Controller('users')
 export class UsersController {
@@ -42,9 +41,8 @@ export class UsersController {
     return user;
   }
 
-  @HttpCode(201)
   @Post()
-  createUSer(@Body() user: User) {
+  createUSer(@Body() user: CreateUserDto) {
     return this.usersService.createUser(user);
   }
 

@@ -3,14 +3,13 @@ import { CategoryRepository } from './categories.repository';
 
 @Injectable()
 export class CategoriesService {
-    constructor(private readonly categoriesRepository: CategoryRepository){}
+  constructor(private readonly categoriesRepository: CategoryRepository) {}
 
-    async getCategories(){
-        return await this.categoriesRepository.getCategories()
-    }
+  async getCategories() {
+    return await this.categoriesRepository.getCategories();
+  }
 
-    async addCategories(){
-        return await this.categoriesRepository.addCategories()
-    }
-
+  async addCategories() {
+    return await this.categoriesRepository.addCategories();
+  }
 }

@@ -1,5 +1,11 @@
-import { Order } from 'src/orders/Order.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
+import { Order } from 'src/orders/entities/Order.entity';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
@@ -15,19 +21,19 @@ export class User {
   @Column({ length: 20, nullable: false, type: 'varchar' })
   password: string;
 
-  @Column({type: 'text'})
+  @Column({ type: 'text' })
   address: string;
 
-  @Column({type: 'varchar'})
+  @Column({ type: 'varchar' })
   phone: string;
 
-  @Column({type: 'varchar', length: 50})
+  @Column({ type: 'varchar', length: 50 })
   country?: string | undefined;
 
-  @Column({type: 'varchar', length: 50})
+  @Column({ type: 'varchar', length: 50 })
   city?: string | undefined;
 
-  @OneToMany(()=> Order, (order) => order.user)
-  @JoinColumn({name: 'order_id' })
-  orders: Order[]
+  @OneToMany(() => Order, (order) => order.user)
+  @JoinColumn({ name: 'order_id' })
+  orders: Order[];
 }

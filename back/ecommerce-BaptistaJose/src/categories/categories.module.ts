@@ -6,7 +6,7 @@ import { Category } from './Category.entity';
 import { CategoryRepository } from './categories.repository';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Category])],
+  imports: [TypeOrmModule.forFeature([Category])],
   controllers: [CategoriesController],
   providers: [CategoriesService, CategoryRepository],
 })
