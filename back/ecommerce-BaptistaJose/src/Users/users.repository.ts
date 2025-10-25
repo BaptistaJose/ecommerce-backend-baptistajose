@@ -21,7 +21,8 @@ export class UsersRepository {
       where: { id },
       relations: { orders: true },
     });
-    if (!user) throw new NotFoundException(`El usuario con el id: ${id} no existe`) 
+    if (!user)
+      throw new NotFoundException(`El usuario con el id: ${id} no existe`);
     const { password, ...userNotPassword } = user;
 
     return userNotPassword;
@@ -33,16 +34,18 @@ export class UsersRepository {
     return userSave.id;
   }
 
-  async updateUser(id: string, user: Partial< User>) {
+  async updateUser(id: string, user: Partial<User>) {
     const userFound = await this.userRepository.findOneBy({ id });
-    if (!userFound) throw new NotFoundException(`El usuario con el id: ${id} no existe`)
+    if (!userFound)
+      throw new NotFoundException(`El usuario con el id: ${id} no existe`);
     await this.userRepository.update(id, user);
     return id;
   }
 
   async deleteUser(id: string) {
     const userFound = await this.userRepository.findOneBy({ id });
-    if (!userFound)throw new NotFoundException(`El usuario con el id: ${id} no existe`)
+    if (!userFound)
+      throw new NotFoundException(`El usuario con el id: ${id} no existe`);
     await this.userRepository.remove(userFound);
     return id;
   }

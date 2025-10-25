@@ -35,7 +35,9 @@ export class ProductsRepository {
         );
 
         if (!category)
-          throw new NotFoundException(`la categoria ${producto.category} no existe`);
+          throw new NotFoundException(
+            `la categoria ${producto.category} no existe`,
+          );
 
         const product = new Product();
         product.name = producto.name;
@@ -59,7 +61,8 @@ export class ProductsRepository {
 
   async updateProduct(id: string, product: Product) {
     const productFound = await this.productRepository.findOneBy({ id });
-    if (!productFound) throw new NotFoundException(`El Producto con el id: ${id} no existe`);
+    if (!productFound)
+      throw new NotFoundException(`El Producto con el id: ${id} no existe`);
     await this.productRepository.update(id, product);
     return id;
   }
@@ -72,14 +75,16 @@ export class ProductsRepository {
 
   async deleteProduct(id: string) {
     const productFound = await this.productRepository.findOneBy({ id });
-    if (!productFound) throw new NotFoundException(`El Producto con el id: ${id} no existe`);
+    if (!productFound)
+      throw new NotFoundException(`El Producto con el id: ${id} no existe`);
     await this.productRepository.remove(productFound);
     return id;
   }
 
   async getProductById(id: string) {
     const product = await this.productRepository.findOneBy({ id });
-    if (!product) throw new NotFoundException(`El Producto con el id: ${id} no existe`);;
+    if (!product)
+      throw new NotFoundException(`El Producto con el id: ${id} no existe`);
     return product;
   }
 }

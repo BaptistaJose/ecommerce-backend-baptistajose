@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from 'src/orders/entities/Order.entity';
-import { DataSource, EntityManager, Or, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { OrderDetail } from 'src/orders/entities/OrderDetail.entity';
 import { Product } from 'src/products/Product.entity';
 import { User } from 'src/users/User.entity';
@@ -14,14 +14,11 @@ import { User } from 'src/users/User.entity';
 export class OrdersRepository {
   constructor(
     @InjectRepository(Order) private ordersRepository: Repository<Order>,
-    @InjectRepository(OrderDetail)
-    private orderDetailRepository: Repository<OrderDetail>,
-    @InjectRepository(Product) private productRepository: Repository<Product>,
-    @InjectRepository(User) private userRepository: Repository<User>,
     private dataSource: DataSource,
   ) {}
 
   async addOrder(userId: string, products: Partial<Product[]>) {
+    
     return await this.dataSource.transaction(
       async (entityManager: EntityManager) => {
         const user = await entityManager.findOne(User, {
@@ -73,7 +70,7 @@ export class OrdersRepository {
         await entityManager.save(OrderDetail, orderDetail);
         return await entityManager.findOne(Order, {
           where: { id: newOrder.id },
-          relations: { orderDetails: {products: true} },
+          relations: { orderDetails: { products: true } },
         });
       },
     );
