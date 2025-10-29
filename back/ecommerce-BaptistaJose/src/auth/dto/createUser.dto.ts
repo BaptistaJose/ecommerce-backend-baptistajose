@@ -25,6 +25,10 @@ export class CreateUserDto {
   password: string;
 
   @IsString()
+  @IsNotEmpty()
+  confirmPassword: string
+
+  @IsString()
   @Length(3, 80)
   @IsNotEmpty()
   address: string;
@@ -35,11 +39,9 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
-  @Length(5, 20)
   country?: string;
 
   @IsOptional()
   @IsString()
-  @Length(5, 20)
   city?: string;
 }

@@ -18,7 +18,7 @@ export class ProductsService {
     return await this.productsRepository.deleteProduct(id);
   }
 
-  async createProduct(product: Product) {
+  async createProduct(product: Partial<Product>) {
     if (!product.name || !product.price || !product.stock)
       throw new BadRequestException(`Faltan datos del producto`);
 

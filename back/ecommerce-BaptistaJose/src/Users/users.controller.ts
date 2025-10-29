@@ -14,7 +14,7 @@ import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { UserResponse } from './Dto/user.response';
 import type { Request } from 'express';
-import { CreateUserDto } from './Dto/createUser.dto';
+import { CreateUserDto } from '../auth/dto/createUser.dto';
 
 @Controller('users')
 export class UsersController {
@@ -41,10 +41,10 @@ export class UsersController {
     return user;
   }
 
-  @Post()
+/*  @Post()
   createUSer(@Body() user: CreateUserDto) {
     return this.usersService.createUser(user);
-  }
+  }*/
 
   @Put(':id')
   @UseGuards(AuthGuard)

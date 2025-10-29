@@ -4,29 +4,29 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { Observable } from 'rxjs';
-
-function validateRequest(request: Request) {
-  const headerAuth = request.headers['authorization'];
-  if (!headerAuth)
-    throw new UnauthorizedException('Falta el header Authorization');
-
-  const credentials = headerAuth.split(' ')[1];
-
-  const [email, password] = credentials.split(':');
-  if (!email || !password)
-    throw new UnauthorizedException('Formato inválido: falta email o password');
-
-  return true;
-}
+import { config as dotenvConfig } from 'dotenv';
+import { JwtService } from '@nestjs/jwt';
+dotenvConfig({ path: './.env.development' });
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+   constructor(private readonly jwstService: JwtService) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    return validateRequest(request);
+    const token = request.headers['authorization'].split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('Se requiere un token');
+    }
+    try {
+      const secret = process.env.JWT_SECRET;
+      const payload = this.jwstService.verify(token, {secret})
+      request.user = payload;
+      return true
+    } catch (error) {
+      throw new UnauthorizedException('Token invalid');
+    }
   }
 }

@@ -59,7 +59,7 @@ export class ProductsRepository {
     return 'Precargar de products finalizada con exito';
   }
 
-  async updateProduct(id: string, product: Product) {
+  async updateProduct(id: string, product: Partial< Product>) {
     const productFound = await this.productRepository.findOneBy({ id });
     if (!productFound)
       throw new NotFoundException(`El Producto con el id: ${id} no existe`);
@@ -67,7 +67,7 @@ export class ProductsRepository {
     return id;
   }
 
-  async createProduct(product: Omit<Product, 'id'>) {
+  async createProduct(product: Partial<Product>) {
     const productCreate = await this.productRepository.create(product);
     const productSave = await this.productRepository.save(productCreate);
     return productSave.id;

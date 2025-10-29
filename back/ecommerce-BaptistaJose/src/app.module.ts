@@ -8,9 +8,18 @@ import { OrdersModule } from './orders/orders.module';
 import { CategoriesModule } from './categories/categories.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import typeorm from './config/typeorm';
+import { JwtModule } from '@nestjs/jwt';
+import {config as dotenvConfig} from "dotenv"
+
+dotenvConfig({path: './.env.development'})
 
 @Module({
   imports: [
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: {expiresIn: '1h'}
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeorm],

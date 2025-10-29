@@ -13,6 +13,5 @@ export class LoginUserDto {
 
   @IsString()
   @IsNotEmpty()
-  @IsStrongPassword()
   password: string;
 }
