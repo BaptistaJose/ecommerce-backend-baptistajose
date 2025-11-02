@@ -14,14 +14,17 @@ import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { UserResponse } from './Dto/user.response';
 import type { Request } from 'express';
-import { CreateUserDto } from '../auth/dto/createUser.dto';
+import { RoleGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/decorators/role.decorator';
+import { RolesEnum } from 'src/auth/enums/roles.enum';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @UseGuards(AuthGuard)
+  @Roles(RolesEnum.Admin)
+  @UseGuards(AuthGuard, RoleGuard)
   async getUsers(@Query('page') page?: string, @Query('limit') limit?: string) {
     const pageNum = Number(page);
     const limitNum = Number(limit);
@@ -34,17 +37,13 @@ export class UsersController {
   }
 
   @Get(':id')
+  @Roles(RolesEnum.Admin)
   @UseGuards(AuthGuard)
   async getUserById(@Req() request: Request) {
     const { id } = request.params;
     const user = await this.usersService.getUserById(id);
     return user;
   }
-
-/*  @Post()
-  createUSer(@Body() user: CreateUserDto) {
-    return this.usersService.createUser(user);
-  }*/
 
   @Put(':id')
   @UseGuards(AuthGuard)

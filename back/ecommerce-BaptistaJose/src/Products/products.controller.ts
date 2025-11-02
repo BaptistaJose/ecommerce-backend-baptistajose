@@ -12,6 +12,9 @@ import {
 import { ProductsService } from './products.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Product } from './Product.entity';
+import { RoleGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/decorators/role.decorator';
+import { RolesEnum } from 'src/auth/enums/roles.enum';
 
 @Controller('products')
 export class ProductsController {
@@ -46,7 +49,8 @@ export class ProductsController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @Roles(RolesEnum.Admin)
+  @UseGuards(AuthGuard, RoleGuard)
   async updateProduct(@Param('id') id: string, @Body() product: Product) {
     return await this.productsService.updateProduct(id, product);
   }
