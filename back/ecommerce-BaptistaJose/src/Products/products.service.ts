@@ -34,7 +34,7 @@ export class ProductsService {
     return await this.productsRepository.createProduct(product);
   }
 
-  async updateProduct(id: string, product: Product) {
+  async updateProduct(id: string, product: Partial<Product>) {
     return await this.productsRepository.updateProduct(id, product);
   }
 

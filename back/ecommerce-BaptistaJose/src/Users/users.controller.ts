@@ -17,11 +17,13 @@ import type { Request } from 'express';
 import { RoleGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/decorators/role.decorator';
 import { RolesEnum } from 'src/auth/enums/roles.enum';
+import { UserUpdateDto } from './Dto/userUpdate.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
+  @ApiBearerAuth()
   @Get()
   @Roles(RolesEnum.Admin)
   @UseGuards(AuthGuard, RoleGuard)
@@ -36,6 +38,7 @@ export class UsersController {
     return users.map((user) => new UserResponse(user));
   }
 
+  @ApiBearerAuth()
   @Get(':id')
   @Roles(RolesEnum.Admin)
   @UseGuards(AuthGuard)
@@ -45,12 +48,14 @@ export class UsersController {
     return user;
   }
 
+  @ApiBearerAuth()
   @Put(':id')
   @UseGuards(AuthGuard)
-  updateUser(@Param('id') id: string, @Body() user: any) {
+  updateUser(@Param('id') id: string, @Body() user: UserUpdateDto) {
     return this.usersService.updateUser(id, user);
   }
 
+  @ApiBearerAuth()
   @Delete(':id')
   @UseGuards(AuthGuard)
   deleteUser(@Param('id') id: string) {

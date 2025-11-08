@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './Dto/CreateOrder.dto';
+import { ApiParam } from '@nestjs/swagger';
 
 @Controller('orders')
 export class OrdersController {
@@ -13,6 +14,7 @@ export class OrdersController {
   }
 
   @Get(':id')
+  @ApiParam({ name: 'id', type: String, description: 'ID de la orden' })
   async getOrder(@Param() id: string) {
     return await this.ordersService.getOrder(id);
   }

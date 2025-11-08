@@ -11,10 +11,12 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { Product } from './Product.entity';
 import { RoleGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/decorators/role.decorator';
 import { RolesEnum } from 'src/auth/enums/roles.enum';
+import { UpdateProductDto } from './dtos/updateProduct.dto';
+import { CreateProductDto } from './dtos/createProduct.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('products')
 export class ProductsController {
@@ -42,19 +44,22 @@ export class ProductsController {
     return await this.productsService.getProductById(id);
   }
 
+  @ApiBearerAuth()
   @Post()
   @UseGuards(AuthGuard)
-  async createProduct(@Body() product: Product) {
+  async createProduct(@Body() product: CreateProductDto) {
     return await this.productsService.createProduct(product);
   }
 
+  @ApiBearerAuth()
   @Put(':id')
   @Roles(RolesEnum.Admin)
   @UseGuards(AuthGuard, RoleGuard)
-  async updateProduct(@Param('id') id: string, @Body() product: Product) {
+  async updateProduct(@Param('id') id: string, @Body() product: UpdateProductDto) {
     return await this.productsService.updateProduct(id, product);
   }
 
+  @ApiBearerAuth()
   @Delete(':id')
   @UseGuards(AuthGuard)
   async deleteProduct(@Param('id') id: string) {

@@ -18,7 +18,7 @@ export class UsersService {
     return await this.usersRepository.deleteUser(id);
   }
 
-  async updateUser(id: string, user: User) {
+  async updateUser(id: string, user: Partial<User>) {
     return await this.usersRepository.updateUser(id, user);
   }
 
