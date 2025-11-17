@@ -1,98 +1,190 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🛒 Backend E-Commerce – NestJS + TypeORM + PostgreSQL
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este proyecto es una API REST completa para un e-commerce, construida con NestJS, TypeORM, PostgreSQL, Docker, Swagger y manejo de archivos con Cloudinary.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Incluye autenticación, gestión de productos, categorías, órdenes de compra y carga de imágenes.
 
-## Description
+## 📌 Características Principales
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+🔐 Autenticación con JWT (login/registro)
 
-## Project setup
+👤 Gestión de usuarios
 
-```bash
-$ npm install
+🛍️ CRUD completo de productos
+
+🗂️ CRUD de categorías
+
+🧾 Sistema de órdenes de compra
+Con detalle de productos, cantidades y totales
+
+☁️ Carga de imágenes usando Cloudinary
+
+🧱 Migraciones con TypeORM
+
+📄 Documentación automática con Swagger
+
+🐳 Soporte completo para Docker
+
+🧪 Pruebas unitarias con Jest
+
+📦 Arquitectura modular y escalable
+
+## 🏗️ Tecnologías Utilizadas
+
+NestJS
+
+TypeORM
+
+PostgreSQL
+
+Docker & docker-compose
+
+Cloudinary
+
+Swagger
+
+Jest
+
+## 📁 Estructura del Proyecto
+src/
+│── auth/
+│── users/
+│── products/
+│── categories/
+│── orders/
+│── cloudinary/
+│── common/
+│── database/
+│── migrations/
+│── main.ts
+│── app.module.ts
+
+### Entidades principales
+
+User
+
+Product
+
+Category
+
+Order
+
+OrderDetail
+
+## ⚙️ Variables de Entorno
+
+Crea un archivo `.env.development` en la raíz del proyecto con las siguientes variables:
+
+```env
+# Base de Datos
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=yourpassword
+DB_NAME=proyectom4
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+# JWT
+JWT_SECRET=your_jwt_secret_here
 ```
 
-## Compile and run the project
+> ⚠️ **Nota:** Nunca commits el archivo `.env` con valores reales. Úsalo solo localmente.
+
+## 🐳 Ejecutar con Docker
+
+### Construir contenedores
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker-compose build
 ```
 
-## Run tests
+### Levantar el proyecto
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker-compose up
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Ejecutar migraciones dentro del contenedor
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+docker exec -it nestapp npm run migration:run
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## ▶️ Ejecutar en modo desarrollo (sin Docker)
 
-## Resources
+```bash
+npm install
+npm run start:dev
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+## 🗄️ Migracionesnes
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Crear una nueva migración
 
-## Support
+```bash
+npm run migration:generate --name NombreMigracion
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Ejecutar migraciones
 
-## Stay in touch
+```bash
+npm run migration:run
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Revertir una migración
 
-## License
+```bash
+npm run migration:revert
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 📘 Documentación Swagger
+
+Una vez corriendo: 👉 **http://localhost:8080/api**
+
+**Incluye:**
+
+- Auth
+- Users
+- Products
+- Categories
+- Orders
+- Image upload
+
+## 🧩 Arquitectura del proyecto
+
+- **Controllers:** manejan las rutas
+- **Services:** contienen la lógica de negocio
+- **Repositories:** comunicación directa con la base de datos
+- **Middleware:** logs y validaciones
+- **Decoradores personalizados:** para autorización
+- **DTO's:** validación con class-validator
+- **Módulos:** organizados por dominioominio
+
+## 📦 Scripts disponibles
+
+```bash
+npm run start
+npm run start:dev
+npm run build
+npm run test
+npm run migration:generate
+npm run migration:run
+npm run migration:revert
+```
+
+## 📌 Estado del Proyecto
+
+- ✔ Funcional
+- ✔ Documentado
+- ✔ Estructura modular
+- ✔ Preparado para producción
+- ✔ Integración con Cloudinary
+- ✔ Migraciones funcionando
+
+## 📄 Licencia
+
+Este proyecto es de uso libre para portfolio y aprendizaje.

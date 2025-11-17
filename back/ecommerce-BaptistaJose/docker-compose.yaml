@@ -1,7 +1,7 @@
 
 services:
   nestapp:
-    build: .
+    image: baptistajose/nestjs-ecommerce:latest
     ports:
       - '8080:8080'
     env_file:
