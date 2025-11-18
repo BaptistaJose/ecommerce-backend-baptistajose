@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "main"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -29,3 +30,4 @@ jobs:
           file: ./back/ecommerce-BaptistaJose/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/nestjs-ecommerce:latest
+
