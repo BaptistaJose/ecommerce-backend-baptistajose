@@ -1,4 +1,4 @@
-import { OrderDetail } from '../entities/orderDetail.entity';
+import { OrderDetail } from './orderDetail.entity';
 import { User } from '../../users/user.entity';
 import {
   Column,
