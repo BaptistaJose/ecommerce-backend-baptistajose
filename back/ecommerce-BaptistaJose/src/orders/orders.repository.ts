@@ -4,11 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order } from '../orders/entities/Order.entity';
+import { Order } from './entities/order.entity';
 import { DataSource, EntityManager, Repository } from 'typeorm';
-import { OrderDetail } from '../orders/entities/OrderDetail.entity';
-import { Product } from '../products/Product.entity';
-import { User } from '../users/User.entity';
+import { OrderDetail } from './entities/orderDetail.entity';
+import { Product } from '../products/product.entity';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class OrdersRepository {
