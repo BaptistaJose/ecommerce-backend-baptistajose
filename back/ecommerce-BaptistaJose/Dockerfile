@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copiar todo el código fuente
-COPY back/ecommerce-BaptistaJose .
+COPY . .
 
 # Compilar NestJS → genera la carpeta dist
 RUN npm run build
