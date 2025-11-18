@@ -1,5 +1,5 @@
 import { Category } from '../categories/category.entity';
-import { OrderDetail } from '../orders/entities/orderDetail.entity';
+import { OrderDetail } from '../orders/entities/temp';
 import {
   Column,
   Entity,
