@@ -10,10 +10,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { RoleGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/decorators/role.decorator';
-import { RolesEnum } from 'src/auth/enums/roles.enum';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { RoleGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../decorators/role.decorator';
+import { RolesEnum } from '../auth/enums/roles.enum';
 import { UpdateProductDto } from './dtos/updateProduct.dto';
 import { CreateProductDto } from './dtos/createProduct.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';

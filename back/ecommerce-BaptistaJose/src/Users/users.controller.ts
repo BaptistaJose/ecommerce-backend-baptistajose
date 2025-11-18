@@ -11,12 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { AuthGuard } from '../auth/guards/auth.guard';
 import { UserResponse } from './Dto/user.response';
 import type { Request } from 'express';
-import { RoleGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/decorators/role.decorator';
-import { RolesEnum } from 'src/auth/enums/roles.enum';
+import { RoleGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../decorators/role.decorator';
+import { RolesEnum } from '../auth/enums/roles.enum';
 import { UserUpdateDto } from './Dto/userUpdate.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 

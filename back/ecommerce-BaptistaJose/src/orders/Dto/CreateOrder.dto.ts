@@ -6,7 +6,7 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { Product } from 'src/products/Product.entity';
+import { Product } from '../../products/Product.entity';
 
 export class CreateOrderDto {
   @ApiProperty({

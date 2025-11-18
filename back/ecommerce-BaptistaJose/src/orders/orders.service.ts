@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { OrdersRepository } from './orders.repository';
-import { Product } from 'src/products/Product.entity';
+import { Product } from '../products/Product.entity';
 
 @Injectable()
 export class OrdersService {
