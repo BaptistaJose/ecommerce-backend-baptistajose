@@ -12,7 +12,7 @@ COPY . .
 # Compilar NestJS → genera la carpeta dist
 RUN npm run build
 
-EXPOSE 3001
+EXPOSE 8080
 
 # Ejecutar el build compilado
 CMD ["npm", "run", "start:prod"]
