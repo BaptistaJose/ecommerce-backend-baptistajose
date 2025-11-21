@@ -1,13 +1,28 @@
-export class UserResponse {
-  id: string;
-  email: string;
-  name: string;
-  address: string;
-  phone: string;
-  country?: string | undefined;
-  city?: string | undefined;
+import { ApiProperty } from '@nestjs/swagger';
 
-  constructor(user) {
+export class UserResponse {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  address: string;
+
+  @ApiProperty()
+  phone: string;
+
+  @ApiProperty({ required: false })
+  country?: string;
+
+  @ApiProperty({ required: false })
+  city?: string;
+
+  constructor(user: any) {
     this.id = user.id;
     this.email = user.email;
     this.name = user.name;

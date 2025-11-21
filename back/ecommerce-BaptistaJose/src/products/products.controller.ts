@@ -16,12 +16,17 @@ import { Roles } from '../decorators/role.decorator';
 import { RolesEnum } from '../auth/enums/roles.enum';
 import { UpdateProductDto } from './dtos/updateProduct.dto';
 import { CreateProductDto } from './dtos/createProduct.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { ProductResponseDto } from './dtos/productResponse.dto';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private productsService: ProductsService) {}
+  constructor(private productsService: ProductsService) { }
 
+  @ApiOkResponse({
+    type: ProductResponseDto,
+    isArray: true,
+  })
   @Get()
   async getProducts(
     @Query('page') page?: string,
@@ -39,6 +44,9 @@ export class ProductsController {
     return await this.productsService.addProductSeeder();
   }
 
+  @ApiOkResponse({
+    type: ProductResponseDto
+  })
   @Get(':id')
   async getProductById(@Param('id') id: string) {
     return await this.productsService.getProductById(id);
