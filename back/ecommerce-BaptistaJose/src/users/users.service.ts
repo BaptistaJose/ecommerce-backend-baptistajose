@@ -11,6 +11,9 @@ export class UsersService {
   }
 
   async getUserById(id: string) {
+    if(!id){
+      throw new BadRequestException('El id es obligatorio');
+    }
     return await this.usersRepository.getUserById(id);
   }
 

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Put,
   Query,
   Req,
@@ -49,10 +50,9 @@ export class UsersController {
   @Get(':id')
   @Roles(RolesEnum.Admin)
   @UseGuards(AuthGuard)
-  async getUserById(@Req() request: Request) {
-    const { id } = request.params;
+  async getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
     const user = await this.usersService.getUserById(id);
-    return user;
+    return new UserResponse(user);
   }
 
   @ApiBearerAuth()
@@ -61,14 +61,14 @@ export class UsersController {
   })
   @Put(':id')
   @UseGuards(AuthGuard)
-  updateUser(@Param('id') id: string, @Body() user: UserUpdateDto) {
+  updateUser(@Param('id', new ParseUUIDPipe()) id: string, @Body() user: UserUpdateDto) {
     return this.usersService.updateUser(id, user);
   }
 
   @ApiBearerAuth()
   @Delete(':id')
   @UseGuards(AuthGuard)
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.usersService.deleteUser(id);
   }
 }

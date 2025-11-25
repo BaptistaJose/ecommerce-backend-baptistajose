@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -48,7 +49,7 @@ export class ProductsController {
     type: ProductResponseDto
   })
   @Get(':id')
-  async getProductById(@Param('id') id: string) {
+  async getProductById(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.productsService.getProductById(id);
   }
 
@@ -63,14 +64,14 @@ export class ProductsController {
   @Put(':id')
   @Roles(RolesEnum.Admin)
   @UseGuards(AuthGuard, RoleGuard)
-  async updateProduct(@Param('id') id: string, @Body() product: UpdateProductDto) {
+  async updateProduct(@Param('id', new ParseUUIDPipe()) id: string, @Body() product: UpdateProductDto) {
     return await this.productsService.updateProduct(id, product);
   }
 
   @ApiBearerAuth()
   @Delete(':id')
   @UseGuards(AuthGuard)
-  async deleteProduct(@Param('id') id: string) {
+  async deleteProduct(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.productsService.deleteProduct(id);
   }
 }

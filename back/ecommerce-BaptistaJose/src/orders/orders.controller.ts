@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Req, UseGuards } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './Dto/CreateOrder.dto';
 import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
@@ -19,7 +19,7 @@ export class OrdersController {
 
   @Get(':id')
   @ApiParam({ name: 'id', type: String, description: 'ID de la orden' })
-  async getOrder(@Param() id: string) {
+  async getOrder(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.ordersService.getOrder(id);
   }
 }
