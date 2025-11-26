@@ -12,18 +12,22 @@ dotenvConfig({ path: './.env.development' });
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-   constructor(private readonly jwstService: JwtService) {}
+  constructor(private readonly jwstService: JwtService) { }
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
+    const authHeader = request.headers['authorization']
+    if (!authHeader) {
+      throw new UnauthorizedException('Se requiere un token');
+    }
     const token = request.headers['authorization'].split(' ')[1];
     if (!token) {
       throw new UnauthorizedException('Se requiere un token');
     }
     try {
       const secret = process.env.JWT_SECRET;
-      const payload = this.jwstService.verify(token, {secret})
+      const payload = this.jwstService.verify(token, { secret })
       payload.roles = payload.isAdmin ? [RolesEnum.Admin] : [RolesEnum.User]
       request.user = payload;
       return true

@@ -17,7 +17,7 @@ import { Roles } from '../decorators/role.decorator';
 import { RolesEnum } from '../auth/enums/roles.enum';
 import { UpdateProductDto } from './dtos/updateProduct.dto';
 import { CreateProductDto } from './dtos/createProduct.dto';
-import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { ProductResponseDto } from './dtos/productResponse.dto';
 
 @Controller('products')
@@ -43,6 +43,20 @@ export class ProductsController {
   @Get('seeder')
   async addProductSeeder() {
     return await this.productsService.addProductSeeder();
+  }
+
+
+  @Get('price')
+  @ApiOperation({ summary: 'Filtra productos por precio máximo' })
+  @ApiQuery({
+    name: 'price',
+    type: Number,
+    required: true,
+    description: 'Precio máximo; devuelve productos con precio menor a este valor',
+  })
+  async productsFilter(@Query('price') price: string) {
+    const numberPrice = Number(price)
+    return await this.productsService.getProductFilter(numberPrice)
   }
 
   @ApiOkResponse({
@@ -74,4 +88,5 @@ export class ProductsController {
   async deleteProduct(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.productsService.deleteProduct(id);
   }
+
 }

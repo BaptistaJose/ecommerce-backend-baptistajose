@@ -41,4 +41,8 @@ export class ProductsService {
   async getProductById(id: string) {
     return await this.productsRepository.getProductById(id);
   }
+
+  async getProductFilter(price: number){
+    return await this.productsRepository.getProductByPrice(price)
+  }
 }

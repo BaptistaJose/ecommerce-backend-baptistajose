@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './product.entity';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { Category } from '../categories/category.entity';
 import { productsMock } from '../utils/productsMock';
 
@@ -101,5 +101,10 @@ export class ProductsRepository {
     if (!product)
       throw new NotFoundException(`El Producto con el id: ${id} no existe`);
     return product;
+  }
+
+  async getProductByPrice(priceQuery: number) {
+    const products = await this.productRepository.find({ where: { price: LessThan(priceQuery) } })
+    return products
   }
 }
