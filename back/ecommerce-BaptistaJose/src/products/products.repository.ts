@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './product.entity';
 import { Repository } from 'typeorm';
@@ -11,7 +11,7 @@ export class ProductsRepository {
     @InjectRepository(Product) private productRepository: Repository<Product>,
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
-  ) {}
+  ) { }
 
   async getProducts(validPage: number, validLimit: number) {
     const start = (validPage - 1) * validLimit;
@@ -59,7 +59,7 @@ export class ProductsRepository {
     return 'Precargar de products finalizada con exito';
   }
 
-  async updateProduct(id: string, product: Partial< Product>) {
+  async updateProduct(id: string, product: Partial<Product>) {
     const productFound = await this.productRepository.findOneBy({ id });
     if (!productFound)
       throw new NotFoundException(`El Producto con el id: ${id} no existe`);
@@ -68,10 +68,25 @@ export class ProductsRepository {
   }
 
   async createProduct(product: Partial<Product>) {
-    const productCreate = await this.productRepository.create(product);
+    const category = await this.categoryRepository.findOneBy({
+      id: product.category as any,
+    });
+
+    if (!category) {
+      throw new NotFoundException(
+        `La categoría con id ${product.category} no existe`,
+      );
+    }
+
+    const productCreate = this.productRepository.create({
+      ...product,
+      category
+    });
+
     const productSave = await this.productRepository.save(productCreate);
     return productSave.id;
   }
+
 
   async deleteProduct(id: string) {
     const productFound = await this.productRepository.findOneBy({ id });
