@@ -25,8 +25,6 @@ Con detalle de productos, cantidades y totales
 
 🐳 Soporte completo para Docker
 
-🧪 Pruebas unitarias con Jest
-
 📦 Arquitectura modular y escalable
 
 ## 🏗️ Tecnologías Utilizadas
@@ -42,8 +40,6 @@ Docker & docker-compose
 Cloudinary
 
 Swagger
-
-Jest
 
 ## 📁 Estructura del Proyecto
 src/
