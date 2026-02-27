@@ -47,21 +47,21 @@ export class CreateUserDto {
   confirmPassword: string;
 
   @ApiProperty({
-    description: 'Dirección del usuario',
+    description: 'Dirección del usuario (opcional)',
     example: 'Calle Falsa 123',
   })
+  @IsOptional()
   @IsString()
   @Length(3, 80)
-  @IsNotEmpty()
-  address: string;
+  address?: string;
 
   @ApiProperty({
-    description: 'Teléfono de contacto del usuario',
+    description: 'Teléfono de contacto del usuario (opcional)',
     example: '+54 11 5555-5555',
   })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  phone: string;
+  phone?: string;
 
   @ApiPropertyOptional({
     description: 'País del usuario (opcional)',
