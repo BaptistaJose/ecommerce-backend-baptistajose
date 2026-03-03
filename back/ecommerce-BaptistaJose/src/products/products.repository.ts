@@ -44,6 +44,7 @@ export class ProductsRepository {
         product.description = producto.description;
         product.price = producto.price;
         product.stock = producto.stock;
+        product.imgUrl = producto.imageUrl
         product.category = category;
 
         await this.productRepository
