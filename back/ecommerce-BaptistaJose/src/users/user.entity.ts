@@ -21,19 +21,19 @@ export class User {
   @Column({ nullable: false, type: 'varchar' })
   password: string;
 
-  @Column({ type: 'text' })
-  address: string;
+  @Column({ type: 'text', nullable: true })
+  address?: string;
 
-  @Column({ type: 'varchar' })
-  phone: string;
+  @Column({ type: 'varchar', nullable: true })
+  phone?: string;
 
-  @Column({ type: 'varchar', length: 50 })
-  country?: string | undefined;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  country?: string;
 
-  @Column({ type: 'varchar', length: 50 })
-  city?: string | undefined;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  city?: string;
 
-  @Column({type:'boolean', default: false})
+  @Column({ type: 'boolean', default: false })
   isAdmin: boolean
 
   @OneToMany(() => Order, (order) => order.user)
